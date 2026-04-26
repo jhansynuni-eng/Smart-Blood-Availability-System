@@ -1,6 +1,7 @@
 // App State
 let currentView = 'request';
 let currentRequestData = null;
+let isRecording = false;
 
 // Mock Data
 const MOCK_BLOOD_BANKS = [
@@ -32,7 +33,8 @@ function navigate(viewId) {
         'request': 0,
         'dashboard': 1,
         'donors': 2,
-        'register': 3
+        'register': 3,
+        'rewards': 4
     };
     const btns = document.querySelectorAll('.nav-btn');
     if(btns[btnMap[viewId]]) {
@@ -73,6 +75,8 @@ function handleRequestSubmit(event) {
     // Change to dashboard to show searching
     navigate('dashboard');
 }
+
+
 
 // Handle Donor Registration Submit
 function handleRegistrationSubmit(event) {
