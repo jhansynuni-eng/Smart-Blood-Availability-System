@@ -1,0 +1,11 @@
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Dependencies (if you add node modules later)
+node_modules/
+
+# OS generated files
+.DS_Store
+Thumbs.db

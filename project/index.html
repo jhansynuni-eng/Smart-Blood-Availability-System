@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Blood Availability & Delivery</title>
     <meta name="description" content="Centralized, real-time smart platform for blood donors and emergencies">
+    <!-- Leaflet.js - Free Maps, No API Key Needed -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,12 +78,19 @@
                                 <option value="AB-">AB-</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="location">Current Location</label>
-                            <div class="input-with-icon">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="location">Patient Location</label>
+                            <div class="input-with-icon" style="position: relative;">
                                 <span class="material-symbols-outlined">location_on</span>
-                                <input type="text" id="location" placeholder="e.g. City Hospital, Block A" required>
+                                <input type="text" id="location" placeholder="e.g. City Hospital, Sector 4" required style="padding-right: 40px;">
+                                <button type="button" onclick="detectLiveLocation('location', 'map-pin')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--accent-blue); cursor: pointer;" title="Use Live GPS">
+                                    <span class="material-symbols-outlined">my_location</span>
+                                </button>
                             </div>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <!-- Real Google Maps Container -->
+                            <div id="emergency-map" style="height: 160px; border-radius: 8px; overflow: hidden; position: relative; margin-bottom: 0.5rem; background: #1a2035;"></div>
                         </div>
                         <div class="form-group">
                             <label for="urgency">Urgency Level</label>
@@ -137,8 +147,11 @@
     <template id="view-donors">
         <section class="donors-section fade-in">
             <h2>Smart Donor Auto-Alert System</h2>
-            <div class="map-container glass-card">
-                <div class="radar-scan">
+            <div class="map-container glass-card" style="position: relative; overflow: hidden;">
+                <!-- Google Maps Background Container -->
+                <div id="google-map-background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.6;"></div>
+                
+                <div class="radar-scan" style="z-index: 1;">
                     <div class="radar-ping"></div>
                     <div class="radar-ping delay-1"></div>
                     <div class="radar-ping delay-2"></div>
@@ -203,12 +216,19 @@
                                 <option value="AB-">AB-</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="grid-column: span 2;">
                             <label for="donor-location">Your Location/City</label>
-                            <div class="input-with-icon">
+                            <div class="input-with-icon" style="position: relative;">
                                 <span class="material-symbols-outlined">location_on</span>
-                                <input type="text" id="donor-location" placeholder="e.g. Metro City" required>
+                                <input type="text" id="donor-location" placeholder="e.g. Metro City" required style="padding-right: 40px;">
+                                <button type="button" onclick="detectLiveLocation('donor-location', 'register-map')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--accent-blue); cursor: pointer;" title="Use Live GPS">
+                                    <span class="material-symbols-outlined">my_location</span>
+                                </button>
                             </div>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <!-- Real Google Maps Container -->
+                            <div id="register-map" style="height: 160px; border-radius: 8px; overflow: hidden; position: relative; margin-bottom: 0.5rem; background: #1a2035;"></div>
                         </div>
                         <div class="form-group" style="grid-column: span 2;">
                             <label for="last-donation">Date of Last Donation</label>
