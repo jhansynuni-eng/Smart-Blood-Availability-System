@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Blood Availability & Delivery</title>
+    <meta name="description" content="Centralized, real-time smart platform for blood donors and emergencies">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Material Symbols for Icons -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="./styles/design-system.css">
+</head>
+
+<body class="dark-theme">
+    <div id="app">
+        <!-- Navigation/Header -->
+        <header class="glass-header">
+            <div class="logo">
+                <span class="material-symbols-outlined icon-blood">water_drop</span>
+                <h1>LifeSync System</h1>
+            </div>
+            <nav>
+                <button class="nav-btn active" onclick="navigate('request')">Emergency Request</button>
+                <button class="nav-btn" onclick="navigate('dashboard')">Blood Availability</button>
+                <button class="nav-btn" onclick="navigate('donors')">Donor Network</button>
+                <button class="nav-btn" onclick="navigate('register')">Register as Donor</button>
+            </nav>
+            <div class="profile">
+                <div class="avatar">H</div>
+                <div class="user-info">
+                    <span class="user-name">City Hospital</span>
+                    <span class="user-status online">Online</span>
+                </div>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <!-- Views will be injected here via JS -->
+        </main>
+    </div>
+
+    <!-- Templates -->
+    <template id="view-request">
+        <section class="hero-section fade-in">
+            <div class="emergency-badge">
+                <span class="pulse-dot"></span>
+                LIVE REAL-TIME MATCHING
+            </div>
+            <h2 class="hero-title">Find Blood. <span class="text-gradient">Instantly.</span></h2>
+            <p class="hero-subtitle">Right blood, at the right place, at the right time — without delay.</p>
+
+            <div class="glass-card request-form-card">
+                <h3>Create Emergency Request</h3>
+                <form id="blood-request-form" onsubmit="handleRequestSubmit(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="blood-group">Blood Group Needed</label>
+                            <select id="blood-group" required>
+                                <option value="" disabled selected>Select Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O- (Urgent)</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Current Location</label>
+                            <div class="input-with-icon">
+                                <span class="material-symbols-outlined">location_on</span>
+                                <input type="text" id="location" placeholder="e.g. City Hospital, Block A" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="urgency">Urgency Level</label>
+                            <select id="urgency" required>
+                                <option value="critical" selected>Critical (Within 1 hour)</option>
+                                <option value="high">High (Within 3 hours)</option>
+                                <option value="normal">Normal (Within 24 hours)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="units">Units Required</label>
+                            <input type="number" id="units" min="1" max="10" value="2" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary btn-large w-100 mt-4">
+                        <span class="material-symbols-outlined">search</span>
+                        Find Nearest Available Blood
+                    </button>
+                </form>
+            </div>
+        </section>
+    </template>
+
+    <template id="view-dashboard">
+        <section class="dashboard-section fade-in">
+            <div class="dashboard-header">
+                <h2>Real-Time Availability <span class="tag">O- Request</span></h2>
+                <div class="system-status">
+                    Scanning 12 nearby blood banks and 45 hospitals...
+                    <div class="loading-bar"></div>
+                </div>
+            </div>
+
+            <div id="availability-results" class="results-grid">
+                <!-- Results injected via JS -->
+            </div>
+
+            <div id="no-availability-mode" class="glass-card emergency-alert hidden">
+                <div class="alert-icon">
+                    <span class="material-symbols-outlined">warning</span>
+                </div>
+                <div class="alert-content">
+                    <h3>ZERO INVENTORY DETECTED</h3>
+                    <p id="alert-message">No nearby blood banks have O- blood in stock. Activating Emergency Donor Alerts.</p>
+                </div>
+                <button class="btn-danger" onclick="triggerEmergencyAlerts()">
+                    <span class="material-symbols-outlined">campaign</span>
+                    Broadcast to Nearby Donors
+                </button>
+            </div>
+        </section>
+    </template>
+
+    <template id="view-donors">
+        <section class="donors-section fade-in">
+            <h2>Smart Donor Auto-Alert System</h2>
+            <div class="map-container glass-card">
+                <div class="radar-scan">
+                    <div class="radar-ping"></div>
+                    <div class="radar-ping delay-1"></div>
+                    <div class="radar-ping delay-2"></div>
+                </div>
+                <!-- Donor Markers -->
+                <div class="donor-marker matched" style="top: 30%; left: 40%;"></div>
+                <div class="donor-marker matched" style="top: 50%; left: 70%;"></div>
+                <div class="donor-marker" style="top: 60%; left: 20%;"></div>
+                <div class="donor-marker matched pulse" style="top: 45%; left: 45%;"></div>
+
+                <div class="map-overlay">
+                    <div class="stat-card">
+                        <span class="stat-value">3</span>
+                        <span class="stat-label">Eligible O- Donors Nearby</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">2.4km</span>
+                        <span class="stat-label">Average Distance</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="donor-responses mt-4">
+                <h3>Live Donor Responses</h3>
+                <div class="response-list" id="donor-response-list">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="view-register">
+        <section class="hero-section fade-in">
+            <h2 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Join the <span class="text-gradient">Donor Network</span></h2>
+            <p class="hero-subtitle" style="margin-bottom: 2rem;">Register as a verified blood donor and start saving lives in your community.</p>
+            
+            <div class="glass-card request-form-card">
+                <form id="donor-register-form" onsubmit="handleRegistrationSubmit(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="donor-name">Full Name</label>
+                            <input type="text" id="donor-name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="donor-phone">Contact Number</label>
+                            <div class="input-with-icon">
+                                <span class="material-symbols-outlined">call</span>
+                                <input type="tel" id="donor-phone" placeholder="+1 234 567 8900" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="donor-blood-group">Your Blood Group</label>
+                            <select id="donor-blood-group" required>
+                                <option value="" disabled selected>Select Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="donor-location">Your Location/City</label>
+                            <div class="input-with-icon">
+                                <span class="material-symbols-outlined">location_on</span>
+                                <input type="text" id="donor-location" placeholder="e.g. Metro City" required>
+                            </div>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="last-donation">Date of Last Donation</label>
+                            <input type="date" id="last-donation">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem; display: flex; align-items: flex-start; gap: 0.5rem;">
+                        <input type="checkbox" id="health-status" required style="margin-top: 0.25rem;">
+                        <label for="health-status" style="font-size: 0.85rem; line-height: 1.4;">I confirm that I am over 18 years old, weigh at least 50kg, and currently suffer from no transmittable illnesses. I consent to receiving emergency SMS alerts when blood is needed nearby.</label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary btn-large w-100 mt-4" style="background: linear-gradient(135deg, var(--success), #059669);">
+                        <span class="material-symbols-outlined">how_to_reg</span>
+                        Complete Registration
+                    </button>
+                </form>
+            </div>
+        </section>
+    </template>
+
+    <!-- Transport Assistance Modal -->
+    <div id="transport-modal" class="modal-overlay hidden">
+        <div class="glass-card modal-content" style="max-width: 500px; width: 100%;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <h3 style="display: flex; align-items: center; gap: 0.5rem;"><span class="material-symbols-outlined" style="color: var(--accent-blue);">ambulance</span> Transport Assistance</h3>
+                <button class="nav-btn" onclick="closeTransportModal()" style="padding: 0.25rem;"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            
+            <div class="transport-body">
+                <div class="route-map" style="background: rgba(0,0,0,0.3); height: 150px; border-radius: 10px; margin-bottom: 1rem; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border);">
+                    <span class="material-symbols-outlined" style="font-size: 3rem; color: var(--text-secondary); opacity: 0.5;">map</span>
+                    <!-- Simulated route line -->
+                    <div style="position: absolute; top: 50%; left: 20%; right: 20%; height: 4px; background: repeating-linear-gradient(90deg, var(--accent-blue) 0, var(--accent-blue) 10px, transparent 10px, transparent 20px); opacity: 0.7;"></div>
+                    <span class="material-symbols-outlined" style="position: absolute; left: 10%; color: var(--primary-red);">location_on</span>
+                    <span class="material-symbols-outlined" style="position: absolute; right: 10%; color: var(--success);">flag</span>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="stat-card" style="padding: 0.75rem;">
+                        <span class="stat-value" id="transport-eta" style="font-size: 1.2rem;">8 Mins</span>
+                        <span class="stat-label">Estimated Arrival</span>
+                    </div>
+                    <div class="stat-card" style="padding: 0.75rem;">
+                        <span class="stat-value" id="transport-dist" style="font-size: 1.2rem; color: var(--accent-blue);">3.2 km</span>
+                        <span class="stat-label">Fastest Route</span>
+                    </div>
+                </div>
+
+                <div class="delivery-modes" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div id="mode-drone" class="mode-card" style="flex:1; text-align:center; padding: 0.75rem 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; opacity: 0.5; transition: all 0.3s;">
+                        <span class="material-symbols-outlined" style="font-size: 2rem;">flight</span>
+                        <div style="font-size: 0.8rem; margin-top: 0.25rem;">Drone</div>
+                    </div>
+                    <div id="mode-bike" class="mode-card" style="flex:1; text-align:center; padding: 0.75rem 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; opacity: 0.5; transition: all 0.3s;">
+                        <span class="material-symbols-outlined" style="font-size: 2rem;">two_wheeler</span>
+                        <div style="font-size: 0.8rem; margin-top: 0.25rem;">Bike</div>
+                    </div>
+                    <div id="mode-ambulance" class="mode-card" style="flex:1; text-align:center; padding: 0.75rem 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; opacity: 0.5; transition: all 0.3s;">
+                        <span class="material-symbols-outlined" style="font-size: 2rem;">ambulance</span>
+                        <div style="font-size: 0.8rem; margin-top: 0.25rem;">Ambulance</div>
+                    </div>
+                </div>
+                
+                <div class="directions-list" style="font-size: 0.9rem; color: var(--text-secondary);">
+                    <p style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><span class="material-symbols-outlined" style="font-size: 18px;">turn_right</span> Turn right onto Main St.</p>
+                    <p style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><span class="material-symbols-outlined" style="font-size: 18px;">straight</span> Continue straight for <span id="direction-dist">2.5 km</span></p>
+                    <p style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><span class="material-symbols-outlined" style="font-size: 18px;">turn_left</span> Arrive at destination</p>
+                    <p style="color: var(--success); font-weight: bold; margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;"><span class="material-symbols-outlined" style="font-size: 18px;">verified</span> <span id="assigned-mode-text">Delivery Assigned to Emergency Drone</span></p>
+                </div>
+            </div>
+            
+            <button class="btn-primary w-100 mt-4" onclick="closeTransportModal()">Start Live Tracking</button>
+        </div>
+    </div>
+
+    <!-- Simulated SMS Alert Toast -->
+    <div id="sms-toast" class="sms-toast hidden">
+        <div class="sms-header">
+            <span class="material-symbols-outlined" style="font-size: 16px;">chat</span>
+            <span>Messages • Now</span>
+        </div>
+        <div class="sms-content">
+            <strong>LifeSync Alert:</strong> URGENT! <span id="sms-blood-group">O-</span> blood is critically needed near your location at <span id="sms-location">City Hospital</span>. Tap to accept request and save a life.
+        </div>
+    </div>
+
+    <script src="./js/app.js"></script>
+</body>
+
+</html>
