@@ -31,6 +31,7 @@
                 <button class="nav-btn" onclick="navigate('donors')">Donor Network</button>
                 <button class="nav-btn" onclick="navigate('register')">Register as Donor</button>
                 <button class="nav-btn" onclick="navigate('rewards')">My Rewards</button>
+                <button class="nav-btn" onclick="navigate('inventory')">Inventory Admin</button>
             </nav>
             <div class="profile">
                 <div class="avatar">H</div>
@@ -282,6 +283,72 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="view-inventory">
+        <section class="inventory-section fade-in">
+            <div class="dashboard-header" style="margin-bottom: 2rem;">
+                <h2>Blood Bank <span class="text-gradient">Inventory Portal</span></h2>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem;">Track real-time stock levels, monitor usage, and manage expiry dates to minimize wastage.</p>
+            </div>
+
+            <!-- Top Level KPIs -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                <div class="glass-card" style="padding: 1.5rem; text-align: center; border-bottom: 3px solid var(--accent-blue);">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: white;">245</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">Total Units Available</div>
+                </div>
+                <div class="glass-card" style="padding: 1.5rem; text-align: center; border-bottom: 3px solid var(--success);">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: white;">12</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">Units Dispatched Today</div>
+                </div>
+                <div class="glass-card" style="padding: 1.5rem; text-align: center; border-bottom: 3px solid var(--warning);">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: var(--warning); display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <span class="material-symbols-outlined">warning</span> 8
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">Expiring in < 3 Days</div>
+                </div>
+                <div class="glass-card" style="padding: 1.5rem; text-align: center; border-bottom: 3px solid var(--primary-red);">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary-red); display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <span class="material-symbols-outlined">bloodtype</span> O-
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">Critical Low Stock</div>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; align-items: center;">
+                <h3 style="margin: 0;">Detailed Unit Tracking</h3>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn-primary" style="background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 0.5rem 1rem;">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">filter_list</span> Filter
+                    </button>
+                    <button class="btn-primary" style="padding: 0.5rem 1rem;">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">add</span> Add New Units
+                    </button>
+                </div>
+            </div>
+
+            <!-- Inventory Table -->
+            <div class="glass-card" style="padding: 0; overflow: hidden;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid var(--glass-border);">
+                            <th style="padding: 1rem; font-weight: 600; color: var(--text-secondary);">Unit ID</th>
+                            <th style="padding: 1rem; font-weight: 600; color: var(--text-secondary);">Blood Group</th>
+                            <th style="padding: 1rem; font-weight: 600; color: var(--text-secondary);">Volume</th>
+                            <th style="padding: 1rem; font-weight: 600; color: var(--text-secondary);">Collection Date</th>
+                            <th style="padding: 1rem; font-weight: 600; color: var(--text-secondary);">Expiry Date</th>
+                            <th style="padding: 1rem; font-weight: 600; color: var(--text-secondary);">Status</th>
+                            <th style="padding: 1rem; font-weight: 600; color: var(--text-secondary);">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-table-body">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
             </div>
         </section>
     </template>
